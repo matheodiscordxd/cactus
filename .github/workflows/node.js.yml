@@ -1,0 +1,41 @@
+name: Node.js Bot Workflow
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-start:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+        # Puedes agregar más versiones si es necesario
+
+    steps:
+    # Checkout del código fuente en el repositorio
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Configuración de Node.js
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    # Instalación de dependencias
+    - name: Install dependencies
+      run: npm install
+
+    # Compilación del código (si es necesario)
+    - name: Build the code
+      run: npm run build --if-present
+
+    # Arranque del bot
+    - name: Start the bot
+      run: npm start
+
